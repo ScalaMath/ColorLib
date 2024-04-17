@@ -129,20 +129,21 @@ case class Col1i(override val rgba: Int) extends Color {
    * @param a The alpha component to add in the `[0.0, 1.0]` range.
    * @return The sum between this color and the given components.
    */
-  override def +(r: Float, g: Float, b: Float, a: Float): Color = this + ((r * 255.0f).round, (g * 255.0f).round, (b * 255.0f).round, (a * 255.0f).round)
+  override def +(r: Float, g: Float, b: Float, a: Float): Color = Col1i(this.r + r, this.g + g, this.b + b, this.a + a)
 
   /**
-   * Adds the given values to each component of this color and returns the result.
+   * Adds each component of this color with the components of the given color and returns the result.
    *
-   * The result is clamped.
-   *
-   * @param r The red component to add in the `[0, 255]` range.
-   * @param g The green component to add in the `[0, 255]` range.
-   * @param b The blue component to add in the `[0, 255]` range.
-   * @param a The alpha component to add in the `[0, 255]` range.
-   * @return The sum between this color and the given components.
+   * @param c The color to add.
+   * @return The sum between this color and the given one.
    */
-  override def +(r: Int, g: Int, b: Int, a: Int): Color = Col1i(this.r8 + r, this.g8 + g, this.b8 + b, this.a8 + a)
+  override def +(c: Color): Color = {
+    if(c.isInstanceOf[Col1i]) {
+      Col1i(this.rgba + c.rgba)
+    } else {
+      Col4f(this.r + c.r, this.g + c.g, this.b + c.b, this.a + c.a)
+    }
+  }
 
   /**
    * Subtracts the given values from each component of this color and returns the result.
@@ -155,20 +156,21 @@ case class Col1i(override val rgba: Int) extends Color {
    * @param a The alpha component to subtract in the `[0.0, 1.0]` range.
    * @return The subtraction between this color and the given components.
    */
-  override def -(r: Float, g: Float, b: Float, a: Float): Color = this - ((r * 255.0f).round, (g * 255.0f).round, (b * 255.0f).round, (a * 255.0f).round)
+  override def -(r: Float, g: Float, b: Float, a: Float): Color = Col1i(this.r - r, this.g - g, this.b - b, this.a - a)
 
   /**
-   * Subtracts the given values from each component of this color and returns the result.
+   * Subtracts each component of the given color from the components of this color and returns the result.
    *
-   * The result is clamped.
-   *
-   * @param r The red component to subtract in the `[0, 255]` range.
-   * @param g The green component to subtract in the `[0, 255]` range.
-   * @param b The blue component to subtract in the `[0, 255]` range.
-   * @param a The alpha component to subtract in the `[0, 255]` range.
-   * @return The subtraction between this color and the given components.
+   * @param c The color to subtract.
+   * @return The subtraction between this color and the given one.
    */
-  override def -(r: Int, g: Int, b: Int, a: Int): Color = Col1i(this.r8 - r, this.g8 - g, this.b8 - b, this.a8 - a)
+  override def -(c: Color): Color = {
+    if(c.isInstanceOf[Col1i]) {
+      Col1i(this.rgba - c.rgba)
+    } else {
+      Col4f(this.r - c.r, this.g - c.g, this.b - c.b, this.a - c.a)
+    }
+  }
 
   /**
    * Multiplies each component of this color with the given values and returns the result.
@@ -182,6 +184,34 @@ case class Col1i(override val rgba: Int) extends Color {
    * @return The component-wise product between this color and the given values.
    */
   override def *(r: Float, g: Float, b: Float, a: Float): Color = Col1i((this.r8 * r).round, (this.g8 * g).round, (this.b8 * b).round, (this.a8 * a).round)
+
+  /**
+   * Multiplies each component of this color with each component of the given one and returns the result.
+   *
+   * @param c The color to multiply this one by.
+   * @return The component-wise product between this color and the given one.
+   */
+  override def *(c: Color): Color = {
+    if(c.isInstanceOf[Col1i]) {
+      Col1i(this.r * c.r, this.g * c.g, this.b * c.b, this.a * c.a)
+    } else {
+      Col4f(this.r * c.r, this.g * c.g, this.b * c.b, this.a * c.a)
+    }
+  }
+
+  /**
+   * Divides each component of this color by each component of the given one and returns the result.
+   *
+   * @param c The color to divide this one by.
+   * @return The component-wise division between this color and the given one.
+   */
+  override def /(c: Color): Color = {
+    if(c.isInstanceOf[Col1i]) {
+      Col1i(this.r / c.r, this.g / c.g, this.b / c.b, this.a / c.a)
+    } else {
+      Col4f(this.r / c.r, this.g / c.g, this.b / c.b, this.a / c.a)
+    }
+  }
 
   /**
    * Returns this color with its `r`, `g`, and `b` components inverted.
@@ -222,11 +252,14 @@ case class Col1i(override val rgba: Int) extends Color {
     if(a == 0.0f) {
       Col1i(0)
     } else {
-      Col1i(
-        (this.r * this.a * sa + c.r * c.a) / a,
-        (this.g * this.a * sa + c.g * c.a) / a,
-        (this.b * this.a * sa + c.b * c.a) / a, a
-      )
+      val r = (this.r * this.a * sa + c.r * c.a) / a
+      val g = (this.g * this.a * sa + c.g * c.a) / a
+      val b = (this.b * this.a * sa + c.b * c.a) / a
+      if(c.isInstanceOf[Col1i]) {
+        Col1i(r, g, b, a)
+      } else {
+        Col4f(r, g, b, a)
+      }
     }
   }
 
@@ -286,4 +319,39 @@ object Col1i {
    * @return A new color constructed from the three given components.
    */
   def apply(r: Float, g: Float, b: Float) = new Col1i(r, g, b)
+
+  /**
+   * Constructs a color from the given components in the HSV format.
+   *
+   * @param h The hue of the color.
+   * @param s The saturation of the color.
+   * @param v The lightness (value) of the color.
+   * @param a The alpha component of the color.
+   * @return A new color constructed from the given components in the HSV format.
+   */
+  def hsv(h: Float, s: Float, v: Float, a: Float): Col1i = {
+    val i = (h * 6.0f).floor
+    val f = h * 6.0f - i
+    val p = v * (1.0f - s)
+    val q = v * (1.0f - f * s)
+    val t = v * (1.0f - (1.0f - f) * s)
+    i % 6 match {
+      case 0 => Col1i(v, t, p, a)
+      case 1 => Col1i(q, v, p, a)
+      case 2 => Col1i(p, v, t, a)
+      case 3 => Col1i(p, q, v, a)
+      case 4 => Col1i(t, p, v, a)
+      case 5 => Col1i(v, p, q, a)
+    }
+  }
+
+  /**
+   * Constructs a color from the given components in the HSV format and sets the alpha component to `1.0`.
+   *
+   * @param h The hue of the color.
+   * @param s The saturation of the color.
+   * @param v The lightness (value) of the color.
+   * @return A new color constructed from the given components in the HSV format.
+   */
+  def hsv(h: Float, s: Float, v: Float): Col1i = this.hsv(h, s, v, 1.0f)
 }

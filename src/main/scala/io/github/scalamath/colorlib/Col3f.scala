@@ -145,6 +145,14 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
   override def *(c: Color): Color = if(c.isInstanceOf[Col3f]) this * (c.r, c.g, c.b) else this * (c.r, c.g, c.b, c.a)
 
   /**
+   * Multiplies each component of this color with the given value and returns the result.
+   *
+   * @param f The value to multiply this color by.
+   * @return The product between this color and the given value.
+   */
+  override def *(f: Float): Color = this * (f, f, f)
+
+  /**
    * Divides each component of this color by each component of the given one and returns the result.
    *
    * The result of this operation will be a [[Col3f]] if the given value is a [[Col3f]], otherwise it will be a [[Col4f]].
@@ -182,16 +190,34 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
   override def lighter(k: Float): Color = Col3f(this.r + (1.0f - this.r) * k, this.g + (1.0f - this.g) * k, this.b + (1.0f - this.b) * k)
 
   /**
+   * Computes the linear interpolation between this color and the given one by the given weight and returns the result.
+   *
+   * The given weight must be in the `[0.0, 1.0]` range, representing the amount of interpolation.
+   *
+   * @param to The color to interpolate to.
+   * @param weight The weight of the interpolation between `0.0` and `1.0`.
+   * @return The result of linearly interpolating between this color and the given one.
+   */
+  override def lerp(to: Color, weight: Float): Color = {
+    if(to.isInstanceOf[Col3f]) {
+      super.lerp(to, weight)
+    } else {
+      val f = 1.0f - weight
+      this * (f, f, f, f) + (to * weight)
+    }
+  }
+
+  /**
    * Blends this color and the given one and returns the result.
    *
-   * This is the equivalent of multiplying the colors together if the given color is a [[Col3f]].
+   * This returns the given color if it is a [[Col3f]], since its alpha component is always `1.0`.
    *
    * @param c The color to blend this one with.
    * @return The color resulting from overlaying this color over the given one.
    */
   override def blend(c: Color): Color = {
     if(c.isInstanceOf[Col3f]) {
-      this * c
+      c
     } else {
       val sa = 1.0f - c.a
       Col4f(this.r * sa + c.r * c.a, this.g * sa + c.g * c.a, this.b * sa + c.b * c.a)

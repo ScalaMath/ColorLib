@@ -218,52 +218,6 @@ trait Color {
   def add(r: Float, g: Float, b: Float): Color = this + (r, g, b)
 
   /**
-   * Adds the given values to each component of this color and returns the result.
-   *
-   * @param r The red component to add in the `[0, 255]` range.
-   * @param g The green component to add in the `[0, 255]` range.
-   * @param b The blue component to add in the `[0, 255]` range.
-   * @param a The alpha component to add in the `[0, 255]` range.
-   * @return The sum between this color and the given components.
-   */
-  def +(r: Int, g: Int, b: Int, a: Int): Color = this + (r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f)
-
-  /**
-   * Adds the given values to each component of this color and returns the result.
-   *
-   * This method can be used in place of the `+` operator for better interoperability with Java.
-   *
-   * @param r The red component to add in the `[0, 255]` range.
-   * @param g The green component to add in the `[0, 255]` range.
-   * @param b The blue component to add in the `[0, 255]` range.
-   * @param a The alpha component to add in the `[0, 255]` range.
-   * @return The sum between this color and the given components.
-   */
-  def add(r: Int, g: Int, b: Int, a: Int): Color = this + (r, g, b, a)
-
-  /**
-   * Adds the given values to each component of this color and returns the result.
-   *
-   * @param r The red component to add in the `[0, 255]` range.
-   * @param g The green component to add in the `[0, 255]` range.
-   * @param b The blue component to add in the `[0, 255]` range.
-   * @return The sum between this color and the given components.
-   */
-  def +(r: Int, g: Int, b: Int): Color = this + (r, g, b, 0)
-
-  /**
-   * Adds the given values to each component of this color and returns the result.
-   *
-   * This method can be used in place of the `+` operator for better interoperability with Java.
-   *
-   * @param r The red component to add in the `[0, 255]` range.
-   * @param g The green component to add in the `[0, 255]` range.
-   * @param b The blue component to add in the `[0, 255]` range.
-   * @return The sum between this color and the given components.
-   */
-  def add(r: Int, g: Int, b: Int): Color = this + (r, g, b)
-
-  /**
    * Subtracts the given values from each component of this color and returns the result.
    *
    * @param r The red component to subtract in the `[0.0, 1.0]` range.
@@ -326,52 +280,6 @@ trait Color {
    * @return The subtraction between this color and the given components.
    */
   def subtract(r: Float, g: Float, b: Float): Color = this - (r, g, b)
-
-  /**
-   * Subtracts the given values from each component of this color and returns the result.
-   *
-   * @param r The red component to subtract in the `[0, 255]` range.
-   * @param g The green component to subtract in the `[0, 255]` range.
-   * @param b The blue component to subtract in the `[0, 255]` range.
-   * @param a The alpha component to subtract in the `[0, 255]` range.
-   * @return The subtraction between this color and the given components.
-   */
-  def -(r: Int, g: Int, b: Int, a: Int): Color = this - (r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f)
-
-  /**
-   * Subtracts the given values from each component of this color and returns the result.
-   *
-   * This method can be used in place of the `-` operator for better interoperability with Java.
-   *
-   * @param r The red component to subtract in the `[0, 255]` range.
-   * @param g The green component to subtract in the `[0, 255]` range.
-   * @param b The blue component to subtract in the `[0, 255]` range.
-   * @param a The alpha component to subtract in the `[0, 255]` range.
-   * @return The subtraction between this color and the given components.
-   */
-  def subtract(r: Int, g: Int, b: Int, a: Int): Color = this - (r, g, b, a)
-
-  /**
-   * Subtracts the given values from each component of this color and returns the result.
-   *
-   * @param r The red component to subtract in the `[0, 255]` range.
-   * @param g The green component to subtract in the `[0, 255]` range.
-   * @param b The blue component to subtract in the `[0, 255]` range.
-   * @return The subtraction between this color and the given components.
-   */
-  def -(r: Int, g: Int, b: Int): Color = this - (r, g, b, 0)
-
-  /**
-   * Subtracts the given values from each component of this color and returns the result.
-   *
-   * This method can be used in place of the `-` operator for better interoperability with Java.
-   *
-   * @param r The red component to subtract in the `[0, 255]` range.
-   * @param g The green component to subtract in the `[0, 255]` range.
-   * @param b The blue component to subtract in the `[0, 255]` range.
-   * @return The subtraction between this color and the given components.
-   */
-  def subtract(r: Int, g: Int, b: Int): Color = this - (r, g, b)
 
   /**
    * Multiplies each component of this color with the given values and returns the result.
@@ -537,6 +445,15 @@ trait Color {
   def inverted: Color
 
   /**
+   * Returns the perceived brightness of this color using the RGB to Luma conversion formula.
+   *
+   * Colors with a luminance smaller than `0.5` can be generally considered dark.
+   *
+   * @return The luminance of this color.
+   */
+  def luminance: Float = 0.2126f * this.r + 0.7152f * this.g + 0.0722f * this.b
+
+  /**
    * Makes this color darker by the given amount and returns the result.
    *
    * @param k The ratio from `0.0` to `1.0`.
@@ -563,16 +480,7 @@ trait Color {
    * @param weight The weight of the interpolation between `0.0` and `1.0`.
    * @return The result of linearly interpolating between this color and the given one.
    */
-  def lerp(to: Color, weight: Float): Color = (this * (1.0f - weight)) + (to * weight)
-
-  /**
-   * Returns the perceived brightness of this color using the RGB to Luma conversion formula.
-   *
-   * Colors with a luminance smaller than `0.5` can be generally considered dark.
-   *
-   * @return The luminance of this color.
-   */
-  def luminance: Float = 0.2126f * this.r + 0.7152f * this.g + 0.0722f * this.b
+  def lerp(to: Color, weight: Float): Color = this * (1.0f - weight) + (to * weight)
 
   /**
    * Checks if the components of this color are approximately equal to the given ones using an internal epsilon.
@@ -645,54 +553,22 @@ trait Color {
   def equalsApprox(c: Color): Boolean = this ~= c
 
   /**
-   * Checks if the components of this color are equal to the given ones.
+   * Checks if this color is approximately equal to the given one in the RGBA format.
    *
-   * @param r The red component of the color in the `[0, 255]` range.
-   * @param g The green component of the color in the `[0, 255]` range.
-   * @param b The blue component of the color in the `[0, 255]` range.
-   * @return True if the components of this color are equal to the given ones, otherwise false.
-   * @see [[r8]], [[g8]], [[b8]]
+   * @param rgba The value in the RGBA format to compare this color to.
+   * @return True if this color is approximately equal to the given one, otherwise false.
    */
-  def ==(r: Int, g: Int, b: Int): Boolean = this.r8 == r && this.g8 == g && this.b8 == b
+  def ~=(rgba: Int): Boolean = this ~= (((rgba >> 24) & 0xff) / 255.0f, ((rgba >> 16) & 0xff) / 255.0f, ((rgba >> 8) & 0xff) / 255.0f, (rgba & 0xff) / 255.0f)
 
   /**
-   * Checks if the components of this color are equal to the given ones.
+   * Checks if this color is approximately equal to the given one in the RGBA format.
    *
-   * This method can be used in place of the `==` operator for better interoperability with Java.
+   * This method can be used in place of the `~=` operator for better interoperability with Java.
    *
-   * @param r The red component of the color in the `[0, 255]` range.
-   * @param g The green component of the color in the `[0, 255]` range.
-   * @param b The blue component of the color in the `[0, 255]` range.
-   * @return True if the components of this color are equal to the given ones, otherwise false.
-   * @see [[r8]], [[g8]], [[b8]]
+   * @param rgba The value in the RGBA format to compare this color to.
+   * @return True if this color is approximately equal to the given one, otherwise false.
    */
-  def equals(r: Int, g: Int, b: Int): Boolean = this == (r, g, b)
-
-  /**
-   * Checks if the components of this color are equal to the given ones.
-   *
-   * @param r The red component of the color in the `[0, 255]` range.
-   * @param g The green component of the color in the `[0, 255]` range.
-   * @param b The blue component of the color in the `[0, 255]` range.
-   * @param a The alpha component of the color in the `[0, 255]` range.
-   * @return True if the components of this color are equal to the given ones, otherwise false.
-   * @see [[r8]], [[g8]], [[b8]], [[a8]]
-   */
-  def ==(r: Int, g: Int, b: Int, a: Int): Boolean = this.r8 == r && this.g8 == g && this.b8 == b && this.a8 == a
-
-  /**
-   * Checks if the components of this color are equal to the given ones.
-   *
-   * This method can be used in place of the `==` operator for better interoperability with Java.
-   *
-   * @param r The red component of the color in the `[0, 255]` range.
-   * @param g The green component of the color in the `[0, 255]` range.
-   * @param b The blue component of the color in the `[0, 255]` range.
-   * @param a The alpha component of the color in the `[0, 255]` range.
-   * @return True if the components of this color are equal to the given ones, otherwise false.
-   * @see [[r8]], [[g8]], [[b8]], [[a8]]
-   */
-  def equals(r: Int, g: Int, b: Int, a: Int): Boolean = this == (r, g, b, a)
+  def equalsApprox(rgba: Int): Boolean = this ~= rgba
 }
 
 /**
