@@ -428,6 +428,24 @@ trait Color {
   def divide(r: Float, g: Float, b: Float): Color = this / (r, g, b)
 
   /**
+   * Divides each component of this color by the given value and returns the result.
+   *
+   * @param f The value to divide this color by.
+   * @return The division between this color and the given value.
+   */
+  def /(f: Float): Color = this * (1.0f / f)
+
+  /**
+   * Divides each component of this color by the given value and returns the result.
+   *
+   * This method can be used in place of the `/` operator for better interoperability with Java.
+   *
+   * @param f The value to divide this color by.
+   * @return The division between this color and the given value.
+   */
+  def divide(f: Float): Color = this / f
+
+  /**
    * Blends this color and the given one and returns the result.
    *
    * @param c The color to blend this one with.

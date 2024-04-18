@@ -172,6 +172,12 @@ class Col4fSuite extends AnyFunSuite {
     assert(c1 / c2 === res)
   }
 
+  test("Divide a color by a float") {
+    val color = Col4f(0.2f, 0.4f, 0.6f, 1.0f)
+    val res = Col4f(0.1f, 0.2f, 0.3f, 0.5f)
+    assert(color / 2.0f === res)
+  }
+
   test("Blend two colors") {
     val c1 = Col4f(1.0f, 0.0f, 0.0f, 1.0f)
     val c2 = Col4f(1.0f, 1.0f, 0.0f, 0.5f)
@@ -220,7 +226,14 @@ class Col4fSuite extends AnyFunSuite {
   }
 
   test("Linear interpolation between two colors of different types") {
-    // TODO
+    val c1 = Col4f(0.2f, 0.4f, 0.2f, 0.5f)
+    val c2 = Col1i(0.4f, 0.8f, 0.6f, 1.0f)
+    val res1 = Col4f(0.3f, 0.6f, 0.4f, 0.75f)
+    val res2 = Col4f(0.25f, 0.5f, 0.3f, 0.625f)
+    val res3 = Col4f(0.35f, 0.7f, 0.5f, 0.875f)
+    assert(c1.lerp(c2, 0.5f) === res1)
+    assert(c1.lerp(c2, 0.25f) === res2)
+    assert(c1.lerp(c2, 0.75f) === res3)
   }
 
   test("Color equals approx three floats") {

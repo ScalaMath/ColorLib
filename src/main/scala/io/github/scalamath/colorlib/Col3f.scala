@@ -72,7 +72,13 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
    * @param c The color to add.
    * @return The sum between this color and the given one.
    */
-  override def +(c: Color): Color = if(c.isInstanceOf[Col3f]) this + (c.r, c.g, c.b) else this + (c.r, c.g, c.b, c.a)
+  override def +(c: Color): Color = {
+    if(c.isInstanceOf[Col3f]) {
+      this + (c.r, c.g, c.b)
+    } else {
+      this + (c.r, c.g, c.b, c.a)
+    }
+  }
 
   /**
    * Subtracts the given values from each component of this color and returns the result.
@@ -107,7 +113,13 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
    * @param c The color to subtract.
    * @return The subtraction between this color and the given one.
    */
-  override def -(c: Color): Color = if(c.isInstanceOf[Col3f]) this - (c.r, c.g, c.b) else this - (c.r, c.g, c.b, c.a)
+  override def -(c: Color): Color = {
+    if(c.isInstanceOf[Col3f]) {
+      this - (c.r, c.g, c.b)
+    } else {
+      this - (c.r, c.g, c.b, c.a)
+    }
+  }
 
   /**
    * Multiplies each component of this color with the given values and returns the result.
@@ -142,7 +154,13 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
    * @param c The color to multiply this one by.
    * @return The component-wise product between this color and the given one.
    */
-  override def *(c: Color): Color = if(c.isInstanceOf[Col3f]) this * (c.r, c.g, c.b) else this * (c.r, c.g, c.b, c.a)
+  override def *(c: Color): Color = {
+    if(c.isInstanceOf[Col3f]) {
+      this * (c.r, c.g, c.b)
+    } else {
+      this * (c.r, c.g, c.b, c.a)
+    }
+  }
 
   /**
    * Multiplies each component of this color with the given value and returns the result.
@@ -160,7 +178,13 @@ case class Col3f(r: Float, g: Float, b: Float) extends Color {
    * @param c The color to divide this one by.
    * @return The component-wise division between this color and the given one.
    */
-  override def /(c: Color): Color = if(c.isInstanceOf[Col3f]) this / (c.r, c.g, c.b) else this / (c.r, c.g, c.b, c.a)
+  override def /(c: Color): Color = {
+    if(c.isInstanceOf[Col3f]) {
+      this / (c.r, c.g, c.b)
+    } else {
+      this / (c.r, c.g, c.b, c.a)
+    }
+  }
 
   /**
    * Returns this color with its `r`, `g`, and `b` components inverted.

@@ -173,6 +173,12 @@ class Col1iSuite extends AnyFunSuite {
     assert(c1 / c2 === res)
   }
 
+  test("Divide a color by a float") {
+    val color = Col1i(1.0f, 0.8f, 0.6f, 0.4f)
+    val res = Col1i(0.5f, 0.4f, 0.3f, 0.2f)
+    assert(color / 2.0f === res)
+  }
+
   test("Blend two colors") {
     val c1 = Col1i(1.0f, 0.0f, 0.0f, 1.0f)
     val c2 = Col1i(1.0f, 1.0f, 0.0f, 0.5f)
