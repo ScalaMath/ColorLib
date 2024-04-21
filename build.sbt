@@ -1,16 +1,21 @@
 // Project info
 name := "ColorLib"
 homepage := Some(url("https://github.com/ScalaMath/ColorLib"))
+version := "1.0"
+description := "A Scala library for color math"
+// Organization info
 organization := "io.github.scalamath"
 organizationName := "ScalaMath"
 organizationHomepage := Some(url("https://github.com/ScalaMath"))
-version := "1.0"
-description := "A Scala library for color math"
 // Project scala version
 scalaVersion := "2.13.12"
 
+// Do not append the scala version to the generated artifact
+crossPaths := false
+
 // VecMatLib dependency
 libraryDependencies += "io.github.scalamath" % "vecmatlib" % "3.0"
+
 // Scala test dependency
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test
 // Junit test dependency
@@ -42,11 +47,7 @@ licenses := List(
   "Apache 2" -> new URL("https://www.apache.org/licenses/LICENSE-2.0.txt")
 )
 
-// Maven publishing
+// Publish to local repository
 pomIncludeRepository := { _ => false }
-publishTo := {
-  val nexus = "https://s01.oss.sonatype.org/"
-  if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
+publishTo := Some(Resolver.file("local-ivy", file(Path.userHome + "/.ivy2")))
 publishMavenStyle := true
