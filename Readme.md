@@ -5,7 +5,7 @@ A Scala library for color math.
 
 ## Project goals
 
-ColorLib is an extension of [VecMatLib](https://github.com/HexagonNico/VecMatLib) for color math, since colors can be seen as 3D or 4D vectors whose components are the *r*, *g*, *b*, and *alpha* components of the color.
+ColorLib is an extension of [VecMatLib](https://github.com/ScalaMath/VecMatLib) for color math, since colors can be seen as 3D or 4D vectors whose components are the *r*, *g*, *b*, and *alpha* components of the color.
 
 Color classes are written in Scala to make the best use possible of Scala's operator overloading.
 All methods with symbolic names have an alias for better interoperability with java.
@@ -14,11 +14,11 @@ All operations in ColorLib are designed to **not** modify the object on which th
 
 ## Representation of colors
 
-ColorLib offers 3 different representation of colors:
+ColorLib offers 3 different representations of colors:
 
 * The `Col3f` class represents a color using three single-precision floating point numbers, representing the color's *r*, *g*, and *b* components in a range between `0.0` and `1.0`.
 * The `Col4f` class represents a color using four single-precision floating point numbers, representing the color's *r*, *g*, *b*, and *alpha* components in a range between `0.0` and `1.0`.
-* The `Col1i` class represents a color using a single 4-bits integer.
+* The `Col1i` class represents a color using a single 4-bytes integer.
 
 The `Col3f` and `Col4f` also allow values outside the `[0.0, 1.0]` range.
 This representation matches the one used in the [OpenGL Shading Language](https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)).
@@ -58,6 +58,39 @@ val purple = Col3f(0xff00ff) // Equivalent to (1.0f, 0.0f, 1.0f)
 val transparentGreen = Col4f(0x00ff0080) // Equivalent to (0.0f, 1.0f, 0.0f, 0.5f)
 ```
 
+## Gradients
+
+ColorLib also contains a `Gradient` class that allows to create color gradients.
+A gradient is represented by a set of points, each of which is a pair made of a color and an offset.
+
+```scala
+val gradient = Gradient(
+  0.0f -> Col4f(1.0f, 0.0f, 0.0f), // Red
+  0.5f -> Col4f(1.0f, 1.0f, 0.0f), // Yellow
+  1.0f -> Col4f(0.0f, 1.0f, 0.0f) // Green
+)
+```
+
+```java
+Gradient gradient = new Gradient()
+    .addPoint(0.0f, new Col4f(1.0f, 0.0f, 0.0f)) // Red
+    .addPoint(0.5f, new Col4f(1.0f, 1.0f, 0.0f)) // Yellow
+    .addPoint(1.0f, new Col4f(0.0f, 1.0f, 0.0f)); // Green
+```
+
+Colors can be sampled from a gradient given an offset. Considering the gradient from the previous example:
+
+```scala
+gradient.sample(0.0f) // Returns red
+gradient.sample(0.25f) // Returns an interpolation between red and yellow
+gradient.sample(0.5f) // Returns yellow
+gradient.sample(0.75f) // Returns an interpolation between yellow and green
+gradient.sample(1.0f) // Returns green
+```
+
+Gradients, like colors, are also immutable.
+The methods `addPoint` and `removePoint` do not modify the original gradient, they return a new one.
+
 ## Using with LWJGL
 
 ColorLib can be used together with [LWJGL](https://lwjgl.org) to load colors into shaders.
@@ -71,7 +104,7 @@ public void loadUniform(String name, Color color) {
 }
 ```
 
-Notice how the `Color` trait is used.
+Notice how the `Color` trait is used instead of the concrete `Col3f` or `Col4f` classes.
 
 ## Multithreading
 
@@ -107,13 +140,13 @@ implementation 'io.github.scalamath:colorlib:1.0'
 
 **A**: One of the design goals of ColorLib is to be usable both in Scala and Java. Support for Scala 3 in IDEs is still actively being developed, therefore a Scala 3 library may not be suitable to work with.
 
-**Q**: Why is color math not included in [VecMatLib](https://github.com/HexagonNico/VecMatLib)?
+**Q**: Why is color math not included in [VecMatLib](https://github.com/ScalaMath/VecMatLib)?
 
 **A**: Color math used to be a part of VecMatLib, although there may be applications where colors not necessary, therefore in that case one can depend on VecMatLib without having to include an unnecessary dependency for colors.
 
 ## Contributing
 
-ColorLib was developed by a single person as an extension of [VecMatLib](https://github.com/HexagonNico/VecMatLib).
+ColorLib was developed by a single person as an extension of [VecMatLib](https://github.com/ScalaMath/VecMatLib).
 
 Your contributions are always welcome! Please submit a pull request or open an issue if you want to contribute with bug
 fixes, code improvements, documentation, and better unit test coverage.
