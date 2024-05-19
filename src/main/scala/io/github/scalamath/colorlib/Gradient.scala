@@ -8,6 +8,8 @@ import scala.collection.immutable.TreeMap
  * Created from a set of points made of a color and an offset.
  * A color can be sampled from the gradient and the result will be an interpolation between the colors of the gradient.
  *
+ * The offsets are usually numbers between `0.0` and `1.0`, but other values are also allowed.
+ *
  * @example {{{
  *            // Scala
  *            val gradient = Gradient(
@@ -16,7 +18,7 @@ import scala.collection.immutable.TreeMap
  *              1.0f -> Col4f(0.0f, 1.0f, 0.0f) // Green
  *            )
  *            // Java
- *            var gradient = new Gradient()
+ *            Gradient gradient = new Gradient()
  *              .addPoint(0.0f, new Col4f(1.0f, 0.0f, 0.0f))
  *              .addPoint(0.5f, new Col4f(1.0f, 1.0f, 0.0f))
  *              .addPoint(1.0f, new Col4f(0.0f, 1.0f, 0.0f));
@@ -33,7 +35,7 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   def this() = this(new TreeMap())
 
   /**
-   * Creates a new gradient obtained by updating this gradient with the given color and offset.
+   * Creates a new gradient obtained by updating this one with the given color and offset.
    *
    * @param color The color to add to the gradient.
    * @param offset The offset of the color.
@@ -42,7 +44,7 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   def addPoint(color: Color, offset: Float): Gradient = new Gradient(this.points.updated(offset, color))
 
   /**
-   * Creates a new gradient obtained by updating this gradient with the given color and offset.
+   * Creates a new gradient obtained by updating this one with the given color and offset.
    *
    * @param offset The offset of the color.
    * @param color The color to add to the gradient.
@@ -51,7 +53,7 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   def addPoint(offset: Float, color: Color): Gradient = this.addPoint(color, offset)
 
   /**
-   * Creates a new gradient obtained by updating this gradient with the given color and offset.
+   * Creates a new gradient obtained by updating this one with the given color and offset.
    *
    * This method is an alias for `addPoint`.
    *
@@ -62,7 +64,7 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   def +(color: Color, offset: Float): Gradient = this.addPoint(color, offset)
 
   /**
-   * Creates a new gradient obtained by updating this gradient with the given color and offset.
+   * Creates a new gradient obtained by updating this one with the given color and offset.
    *
    * This method is an alias for `addPoint`.
    *
@@ -73,7 +75,8 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   def +(offset: Float, color: Color): Gradient = this + (color, offset)
 
   /**
-   * Returns the number of colors in the gradient.
+   * Returns the number of points in the gradient.
+   * Each pair of color and offset is a point.
    *
    * @return The number of colors in the gradient.
    */
@@ -82,6 +85,11 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
   /**
    * Returns the interpolated color specified by the given offset.
    * Colors are interpolated linearly.
+   *
+   * Returns black if this gradient is empty.
+   *
+   * Returns the first color in the gradient if the given offset is lower than the offset of the first point.
+   * Returns the last color in the gradient if the given offset is higher than the offset of the last point.
    *
    * @param offset The offset of the color.
    * @return The result of linearly interpolating the color of this gradient at the given offset.
@@ -109,7 +117,13 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
    * @param offset The offset of the color.
    * @return The color at the given offset.
    */
-  def getColor(offset: Float): Color = this.points.maxBefore(offset).map(entry => entry._2).getOrElse(this.points(this.points.firstKey))
+  def getColor(offset: Float): Color = {
+    if(this.points.contains(offset)) {
+      this.points(offset)
+    } else {
+      this.points.maxBefore(offset).map(entry => entry._2).getOrElse(this.points(this.points.firstKey))
+    }
+  }
 
   /**
    * Creates a new gradient obtained by removing the color at the given offset from this gradient.
@@ -133,6 +147,8 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
     case gradient: Gradient => this.points.equals(gradient.points)
     case _ => super.equals(obj)
   }
+
+  override def hashCode(): Int = 31 + this.points.hashCode()
 }
 
 /**
@@ -151,6 +167,7 @@ object Gradient {
 
   /**
    * Creates a gradient from the given points.
+   * Every point is a pair made of an offset and a color.
    *
    * @example {{{
    *            val gradient = Gradient(
