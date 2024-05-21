@@ -115,7 +115,7 @@ Due to ColorLib not using any internal or temporal objects during any computatio
 ### sbt
 
 ```
-libraryDependencies += "io.github.scalamath" % "colorlib" % "1.0"
+libraryDependencies += "io.github.scalamath" % "colorlib" % "1.1"
 ```
 
 ### Maven
@@ -124,14 +124,14 @@ libraryDependencies += "io.github.scalamath" % "colorlib" % "1.0"
 <dependency>
     <groupId>io.github.scalamath</groupId>
     <artifactId>colorlib</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```
-implementation 'io.github.scalamath:colorlib:1.0'
+implementation 'io.github.scalamath:colorlib:1.1'
 ```
 
 ## Questions and answers

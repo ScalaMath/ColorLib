@@ -86,7 +86,7 @@ class Gradient private(private val points: TreeMap[Float, Color]) {
    * Returns the interpolated color specified by the given offset.
    * Colors are interpolated linearly.
    *
-   * Returns black if this gradient is empty.
+   * Returns black if this gradient does not have any points.
    *
    * Returns the first color in the gradient if the given offset is lower than the offset of the first point.
    * Returns the last color in the gradient if the given offset is higher than the offset of the last point.

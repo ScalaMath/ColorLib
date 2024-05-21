@@ -1,7 +1,7 @@
 // Project info
 name := "ColorLib"
 homepage := Some(url("https://github.com/ScalaMath/ColorLib"))
-version := "1.0"
+version := "1.1"
 description := "A Scala library for color math"
 // Organization info
 organization := "io.github.scalamath"
